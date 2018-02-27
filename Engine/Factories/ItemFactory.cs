@@ -17,6 +17,8 @@ namespace Engine.Factories
 
             _standardGameItems.Add(new Weapon(1001, "Pointy stick", 1, 0, 2));
             _standardGameItems.Add(new Weapon(1002, "Rusty sword", 5, 1, 3));
+            _standardGameItems.Add(new GameItem(9002, "Snake fang", 1));
+            _standardGameItems.Add(new GameItem(9003, "Snakeskin", 2));
         }
 
         public static GameItem CreateGameItem(int itemID)
