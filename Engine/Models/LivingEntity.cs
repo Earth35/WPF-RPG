@@ -53,6 +53,7 @@ namespace Engine.Models
                 OnPropertyChanged(nameof(Gold));
             }
         }
+        public ObservableCollection<GroupedInventoryItem> GroupedInventory { get; set; }
 
         public ObservableCollection<GameItem> Inventory { get; set; }
 
@@ -61,11 +62,27 @@ namespace Engine.Models
         protected LivingEntity()
         {
             Inventory = new ObservableCollection<GameItem>();
+            GroupedInventory = new ObservableCollection<GroupedInventoryItem>();
         }
 
         public void AddItemToInventory(GameItem item)
         {
             Inventory.Add(item);
+
+            if (item.IsUnique)
+            {
+                GroupedInventory.Add(new GroupedInventoryItem(item, 1));
+            }
+            else
+            {
+                if (!GroupedInventory.Any(i => i.Item.ItemTypeID == item.ItemTypeID))
+                {
+                    GroupedInventory.Add(new GroupedInventoryItem(item, 0));
+                }
+
+                GroupedInventory.First(i => i.Item.ItemTypeID == item.ItemTypeID).Quantity++;
+
+            }
 
             OnPropertyChanged(nameof(Weapons));
         }
@@ -73,6 +90,20 @@ namespace Engine.Models
         public void RemoveItemFromInventory (GameItem item)
         {
             Inventory.Remove(item);
+
+            GroupedInventoryItem groupedInventoryItemToRemove = GroupedInventory.FirstOrDefault(i => i.Item == item);
+
+            if (groupedInventoryItemToRemove != null)
+            {
+                if (groupedInventoryItemToRemove.Quantity == 1)
+                {
+                    GroupedInventory.Remove(groupedInventoryItemToRemove);
+                }
+                else
+                {
+                    groupedInventoryItemToRemove.Quantity--;
+                }
+            }
 
             OnPropertyChanged(nameof(Weapons));
         }

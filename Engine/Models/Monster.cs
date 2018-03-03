@@ -2,8 +2,6 @@
 {
     public class Monster : LivingEntity
     {
-        private int _hitPoints;
-
         public string ImageName { get; set; }
 
         public int MinimumDamage { get; set; }
