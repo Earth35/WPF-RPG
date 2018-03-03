@@ -40,7 +40,7 @@ namespace Engine.Factories
         {
             if (RandomNumberGenerator.NumberBetween(0, 100) <= dropRate)
             {
-                monster.Inventory.Add(new ItemQuantity(itemID, 1));
+                monster.AddItemToInventory(ItemFactory.CreateGameItem(itemID));
             }
         }
     }
