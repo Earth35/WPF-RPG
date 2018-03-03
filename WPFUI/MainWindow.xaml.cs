@@ -58,10 +58,18 @@ namespace WPFUI
             _gameSession.AttackCurrentMonster();
         }
 
-        private void OnGameMessageRaised (object sender, GameMessageEventArgs e)
+        private void OnGameMessageRaised(object sender, GameMessageEventArgs e)
         {
             GameMessages.Document.Blocks.Add(new Paragraph(new Run(e.Message)));
             GameMessages.ScrollToEnd();
+        }
+
+        private void OnClick_DisplayTradingScreen(object sender, RoutedEventArgs e)
+        {
+            TradingScreen tradeScreen = new TradingScreen();
+            tradeScreen.Owner = this;
+            tradeScreen.DataContext = _gameSession;
+            tradeScreen.ShowDialog();
         }
     }
 }
