@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -8,7 +9,6 @@ namespace Engine.Models
     {
         private string _characterClass;
         private int _experience;
-        private int _level;
 
         public string CharacterClass
         {
@@ -23,20 +23,12 @@ namespace Engine.Models
         public int Experience
         {
             get { return _experience; }
-            set
+            private set
             {
                 _experience = value;
                 OnPropertyChanged(nameof(Experience));
-            }
-        }
 
-        public int Level
-        {
-            get { return _level; }
-            set
-            {
-                _level = value;
-                OnPropertyChanged(nameof(Level));
+                SetLevelAndMaximumHitPoints();
             }
         }
 
@@ -50,6 +42,8 @@ namespace Engine.Models
             Quests = new ObservableCollection<QuestStatus>();
         }
 
+        public event EventHandler OnLeveledUp;
+
         public bool HasAllTheseItems(List<ItemQuantity> items)
         {
             foreach (ItemQuantity item in items)
@@ -61,6 +55,24 @@ namespace Engine.Models
             }
 
             return true;
+        }
+
+        public void GainExperience (int experience)
+        {
+            Experience += experience;
+        }
+
+        private void SetLevelAndMaximumHitPoints ()
+        {
+            int initialLevel = Level;
+            Level = Experience / 100 + 1;
+
+            if (Level != initialLevel)
+            {
+                MaximumHitPoints = Level * 10;
+
+                OnLeveledUp?.Invoke(this, System.EventArgs.Empty);
+            }
         }
     }
 }
